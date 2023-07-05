@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { DELETE, EDIT } from "./redux/constant/FormConstant";
-
+import { viewSearch, viewDelete, viewEdit } from "./redux/action/FormAction";
 class List extends Component {
   renderSV = () => {
-    const { svArr } = this.props;
+    const { svArr, xoasinhvien, suasinhvien } = this.props;
     return svArr.map((sv, index) => {
       return (
         <tr key={index}>
@@ -16,7 +15,7 @@ class List extends Component {
             <button
               className="btn btn-warning mr-1"
               onClick={() => {
-                this.props.suasinhvien(sv);
+                suasinhvien(sv);
               }}
             >
               Edit
@@ -24,7 +23,7 @@ class List extends Component {
             <button
               className="btn btn-danger"
               onClick={() => {
-                this.props.xoasinhvien(sv);
+                xoasinhvien(sv);
               }}
             >
               Delete
@@ -37,6 +36,23 @@ class List extends Component {
   render() {
     return (
       <div className="mt-4">
+        <div className="col-6">
+          <div className="row">
+            <div className="col-10 p-2">
+              <input
+                type="text"
+                id="valueSearch"
+                name="valueSearch"
+                className="form-control"
+                placeholder="Nhập họ tên sinh viên cần tìm"
+                onChange={(event) => {
+                  this.props.handleSearch(event.target.value);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
         <table className="table table-dark">
           <thead>
             <tr>
@@ -61,18 +77,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     xoasinhvien: (sinhvien) => {
-      const action = {
-        type: DELETE,
-        payload: sinhvien,
-      };
-      dispatch(action);
+      dispatch(viewDelete(sinhvien));
     },
     suasinhvien: (sinhvien) => {
-      const action = {
-        type: EDIT,
-        payload: sinhvien,
-      };
-      dispatch(action);
+      dispatch(viewEdit(sinhvien));
+    },
+
+    handleSearch: (sinhvien) => {
+      dispatch(viewSearch(sinhvien));
     },
   };
 };
